@@ -1,4 +1,4 @@
-name: 'mongo-clone-anonymize-action'
+name: 'mongo-clone-action'
 description: 'Github action to trigger mongoDB database clones via mongodump & mongorestore'
 inputs:
   source:
@@ -7,48 +7,13 @@ inputs:
   target:
     description: 'MongoDB connect url that includes username, password & database name you want to clone to'
     required: true
-  mail_username:
-    description: 'mail username'
-    required: true
-  mail_password:
-    description: 'mail password'
-    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Install dependencies
-      shell: bash
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        cd ${{ github.action_path }}
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        echo ${{ inputs.mail_username }}
-        echo ${{ inputs.mail_password }}
-    #- name: Setup Node.js environment
-    #  uses: actions/setup-node@v3.5.1
     - name: Clone Database
       run: ${{ github.action_path }}/clone.sh ${{ inputs.source }} ${{ inputs.target }}
       shell: bash
-    - name: Anonymize Database
-      run: |
-        cd ${{ github.action_path }}
-        ./anonymize.sh ${{ inputs.source }} ${{ inputs.target }}
-      shell: bash
-    - name: Send mail
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ inputs.mail_username }}
-        password: ${{ inputs.mail_password }}
-        secure: true
-        subject: New pre-production details issued
-        attachments: ${{ github.action_path }}/user_map.json
-        to: davide@tamarix.tech, andrea@tamarix.tech
-        from: Tamarix
-        body: Please find the latest pre-production logins.
 
 branding:
   icon: 'server'
