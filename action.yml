@@ -1,5 +1,5 @@
-name: 'mongo-clone-action'
-description: 'Github action to trigger mongoDB database clones via mongodump & mongorestore'
+name: 'mongo-clone-action-macos'
+description: 'Github action to trigger mongoDB database clones via mongodump & mongorestore on macOS'
 inputs:
   source:
     description: 'MongoDB connect url that includes username, password & database name you want to clone from'
@@ -9,7 +9,7 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
+  using: "macos-latest"
   steps:
     - name: Clone Database
       run: ${{ github.action_path }}/clone.sh ${{ inputs.source }} ${{ inputs.target }}
