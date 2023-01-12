@@ -11,6 +11,12 @@ inputs:
 runs:
   using: "macos-latest"
   steps:
+    - name: Download tools
+      run: brew tap mongodb/brew
+      shell: bash
+    - name: Install tools
+      run: brew install mongodb-database-tools
+      shell: bash
     - name: Clone Database
       run: ${{ github.action_path }}/clone.sh ${{ inputs.source }} ${{ inputs.target }}
       shell: bash
